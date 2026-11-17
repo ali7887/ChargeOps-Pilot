@@ -265,7 +265,7 @@ Append a new entry after each phase; do not delete previous entries.
   - `npm run build`: Production build succeeded with all routes recognized.
 - Known limitations: Synthetic dataset in v1; retrieval is lexical/full-text (no semantic embeddings).
 - Security notes: All retrieval and metric endpoints are authenticated; RLS-ready; no CSV/file upload allowed.
-- Git commit: Pending push.
+- Git commit: `a07645e` (pushed to origin/main)
 - Deployment URL (if verified): None.
 - Next phase: Phase 5 — Assistant and safe answer orchestration.
 
