@@ -156,8 +156,8 @@ Never paste secrets into source files or commit them.
 
 ## 10. GitHub and deployment status
 
-**Git Local:** NOT INITIALIZED (directory is not a git repository)  
-**GitHub Remote:** NOT CONFIGURED / NOT PUSHED  
+**Git Local:** INITIALIZED (branch: `main`, clean working tree)  
+**GitHub Remote:** PUSHED (`https://github.com/ali7887/ChargeOps-Pilot.git`, branch `main`, commit `4f9f755`)  
 **Vercel:** NOT DEPLOYED  
 **Supabase project:** NOT CONFIGURED / NOT VERIFIED
 
@@ -193,7 +193,7 @@ Append a new entry after each phase; do not delete previous entries.
   - `npm run build`: Production build and static page generation passed with code 0.
 - Known limitations: Remote repository not yet pushed; credentials for Supabase/Gemini are placeholders in .env.example.
 - Security notes: No secrets committed; .env* ignored by git; demo safety boundary enforced in UI layout.
-- Git commit: Initial commit pending push.
+- Git commit: `4f9f755` (pushed to origin/main)
 - Deployment URL (if verified): None.
 - Next phase: Phase 2 — Database, synthetic seed, and deterministic metrics.
 
