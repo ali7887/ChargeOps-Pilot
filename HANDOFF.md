@@ -4,8 +4,8 @@
 **Repository:** `chargeops-pilot`  
 **Purpose:** Persistent record of actual project state for Antigravity and developers.  
 **Last updated:** 2026-11-17  
-**Current status:** Phase 1 completed. Ready for Phase 2.  
-**Current phase:** Phase 2 — Database, synthetic seed, and deterministic metrics.
+**Current status:** Phase 2 completed. Ready for Phase 3.  
+**Current phase:** Phase 3 — Invitation Auth, RBAC, and security.
 
 > This file is the single source of truth for progress. Do not mark any phase complete without checking the actual files and running its acceptance tests.
 
@@ -55,7 +55,7 @@ Allowed statuses: `NOT STARTED`, `IN PROGRESS`, `BLOCKED`, `PASS`, `PASS WITH LI
 |---|---|---|---|---|
 | 0 | Repository inspection and plan | PASS | 2026-11-17 | Initial inspection completed. No existing code or git repo found. Clean starting point. |
 | 1 | Foundation and configuration | PASS | 2026-11-17 | Next.js 16 App Router, TS, Tailwind, error boundary, Persian README, npm scripts, lint/typecheck/tests/build all passing. |
-| 2 | Database, synthetic seed, metrics | NOT STARTED | — | Migrations, RLS, deterministic metrics |
+| 2 | Database, synthetic seed, metrics | PASS | 2026-11-17 | Initial schema migration, RLS policies, synthetic seed, deterministic metrics engine and 8 edge-case tests all passing. |
 | 3 | Invitation Auth, RBAC, security | NOT STARTED | — | Supabase SSR, roles, route auth |
 | 4 | Dashboard and operational retrieval | NOT STARTED | — | Metrics, exact-code, full-text |
 | 5 | Assistant and safe orchestration | NOT STARTED | — | Four intents, citations, abstention |
@@ -197,6 +197,27 @@ Append a new entry after each phase; do not delete previous entries.
 - Deployment URL (if verified): None.
 - Next phase: Phase 2 — Database, synthetic seed, and deterministic metrics.
 
+### Phase 2 — Database, synthetic seed, and deterministic metrics
+- Status: PASS
+- Date: 2026-11-17
+- Summary: Implemented versioned Supabase SQL migration for profiles, charging_events, runbook_sections (with tsvector search), audit_events, and strict RLS policies. Created repeatable synthetic seed data covering multiple retries, duplicates, timeouts, reversals, pending states, and late-arriving events. Implemented deterministic metric calculation engine (`lib/metrics.ts`) and 8 comprehensive edge-case unit tests (`tests/metrics.test.ts`).
+- Files created/updated:
+  - `supabase/migrations/20261117000000_initial_schema.sql`
+  - `supabase/seed.sql`
+  - `lib/metrics.ts`
+  - `tests/metrics.test.ts`
+  - `HANDOFF.md`
+- Commands/tests:
+  - `npm run lint`: Passed with 0 errors.
+  - `npm run typecheck`: Passed with 0 errors.
+  - `npm test`: 10 tests across 2 suites passed in 2.27s.
+  - `npm run build`: Production build succeeded with code 0.
+- Known limitations: Remote Supabase project URL and service role keys are not yet connected (awaiting user credentials when live remote DB connection is desired).
+- Security notes: All synthetic data; check constraint `synthetic = true` enforced; RLS default deny configured.
+- Git commit: Pending push.
+- Deployment URL (if verified): None.
+- Next phase: Phase 3 — Invitation Auth, RBAC, and security.
+
 ```markdown
 ### Phase N — [Name]
 - Status: PASS / PASS WITH LIMITATIONS / BLOCKED
@@ -237,4 +258,4 @@ Append a new entry after each phase; do not delete previous entries.
 
 ## 13. Immediate next action
 
-Proceed to Phase 2: Database, synthetic seed, and deterministic metrics (create versioned Supabase SQL migrations for profiles, charging_events, runbook_sections, RLS policies, synthetic seed script, and deterministic metrics calculation module with comprehensive edge-case tests). Commit and push Phase 1 foundation to GitHub.
+Proceed to Phase 3: Invitation Auth, RBAC, and security (Supabase Auth SSR client/server utilities, invitation-only login page, backend role authorization, route protection, and security headers). If connecting to a live Supabase project, prompt user for Supabase URL and Keys. Commit and push Phase 2 work to GitHub.
