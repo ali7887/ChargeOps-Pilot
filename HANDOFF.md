@@ -287,7 +287,7 @@ Append a new entry after each phase; do not delete previous entries.
   - `npm run build`: Production build succeeded with all routes recognized.
 - Known limitations: In `AI_PROVIDER=none`, responses are strictly deterministic templates.
 - Security notes: Prompt injection attacks and operational command requests are safely blocked; no secret exposure; no arbitrary SQL.
-- Git commit: Pending push.
+- Git commit: `76aed91` (pushed to origin/main)
 - Deployment URL (if verified): None.
 - Next phase: Phase 6 — UI completion, hardening, and final QA.
 
