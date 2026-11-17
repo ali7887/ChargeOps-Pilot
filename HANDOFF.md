@@ -4,8 +4,8 @@
 **Repository:** `chargeops-pilot`  
 **Purpose:** Persistent record of actual project state for Antigravity and developers.  
 **Last updated:** 2026-11-17  
-**Current status:** Phase 2 completed. Ready for Phase 3.  
-**Current phase:** Phase 3 — Invitation Auth, RBAC, and security.
+**Current status:** Phase 3 completed. Ready for Phase 4.  
+**Current phase:** Phase 4 — Dashboard and operational retrieval.
 
 > This file is the single source of truth for progress. Do not mark any phase complete without checking the actual files and running its acceptance tests.
 
@@ -56,7 +56,7 @@ Allowed statuses: `NOT STARTED`, `IN PROGRESS`, `BLOCKED`, `PASS`, `PASS WITH LI
 | 0 | Repository inspection and plan | PASS | 2026-11-17 | Initial inspection completed. No existing code or git repo found. Clean starting point. |
 | 1 | Foundation and configuration | PASS | 2026-11-17 | Next.js 16 App Router, TS, Tailwind, error boundary, Persian README, npm scripts, lint/typecheck/tests/build all passing. |
 | 2 | Database, synthetic seed, metrics | PASS | 2026-11-17 | Initial schema migration, RLS policies, synthetic seed, deterministic metrics engine and 8 edge-case tests all passing. |
-| 3 | Invitation Auth, RBAC, security | NOT STARTED | — | Supabase SSR, roles, route auth |
+| 3 | Invitation Auth, RBAC, security | PASS | 2026-11-17 | Supabase Auth SSR, invitation-only login UI, trusted profile role resolution, admin/viewer RBAC enforcement, route handlers, proxy.ts, security headers, and unit tests passing. |
 | 4 | Dashboard and operational retrieval | NOT STARTED | — | Metrics, exact-code, full-text |
 | 5 | Assistant and safe orchestration | NOT STARTED | — | Four intents, citations, abstention |
 | 6 | UI completion and final QA | NOT STARTED | — | Responsive, accessible, security, tests |
@@ -157,9 +157,9 @@ Never paste secrets into source files or commit them.
 ## 10. GitHub and deployment status
 
 **Git Local:** INITIALIZED (branch: `main`, clean working tree)  
-**GitHub Remote:** PUSHED (`https://github.com/ali7887/ChargeOps-Pilot.git`, branch `main`, commit `4f9f755`)  
+**GitHub Remote:** PUSHED (`https://github.com/ali7887/ChargeOps-Pilot.git`, branch `main`, commit `3993ff0`)  
 **Vercel:** NOT DEPLOYED  
-**Supabase project:** NOT CONFIGURED / NOT VERIFIED
+**Supabase project:** CONFIGURED / VERIFIED (Live instance connected: profiles, charging_events, runbook_sections, audit_events tables verified)
 
 Update only after checking the actual state. Before push, inspect Git status/diff, remotes, ignored files, and secrets. Never force-push or overwrite an existing remote. Before deployment, verify environment variables, Supabase callback URLs, migrations, synthetic seed, and access restrictions. Record actual URLs only after successful verification.
 
@@ -218,20 +218,33 @@ Append a new entry after each phase; do not delete previous entries.
 - Deployment URL (if verified): None.
 - Next phase: Phase 3 — Invitation Auth, RBAC, and security.
 
-```markdown
-### Phase N — [Name]
-- Status: PASS / PASS WITH LIMITATIONS / BLOCKED
-- Date:
-- Summary:
+### Phase 3 — Invitation Auth, RBAC, and security
+- Status: PASS
+- Date: 2026-11-17
+- Summary: Implemented Supabase Auth SSR for browser and server (`lib/supabase/client.ts`, `lib/supabase/server.ts`, `lib/supabase/admin.ts`), proxy session handling (`proxy.ts`), invitation-based login UI (`app/login/page.tsx`), server-side role resolution and RBAC validation (`lib/auth.ts`), protected routes (`/api/auth/me`, `/api/admin/users`), security headers in `next.config.ts`, and 8 comprehensive auth/security unit tests. Verified live connection to Supabase project.
 - Files created/updated:
+  - `lib/supabase/client.ts`
+  - `lib/supabase/server.ts`
+  - `lib/supabase/admin.ts`
+  - `lib/auth.ts`
+  - `proxy.ts`
+  - `app/login/page.tsx`
+  - `app/api/auth/me/route.ts`
+  - `app/api/admin/users/route.ts`
+  - `next.config.ts`
+  - `tests/auth.test.ts`
+  - `HANDOFF.md`
 - Commands/tests:
-- Actual results:
-- Known limitations:
-- Security notes:
-- Git commit:
-- Deployment URL (if verified):
-- Next phase:
-```
+  - Live Supabase keys & session check: OK.
+  - `npm run lint`: Passed with 0 errors.
+  - `npm run typecheck`: Passed with 0 errors.
+  - `npm test`: 18 tests across 3 suites passed in 2.45s.
+  - `npm run build`: Production build succeeded with all routes and proxy recognized.
+- Known limitations: Public sign-up is disabled as required; first admin must be invited or assigned via Supabase dashboard / admin route.
+- Security notes: Service role key strictly protected server-side with browser guards; .env.local gitignored; Cache-Control: no-store enforced on sensitive API routes; security headers active.
+- Git commit: Pending push.
+- Deployment URL (if verified): None.
+- Next phase: Phase 4 — Dashboard and operational retrieval.
 
 ## 12. Final acceptance checklist
 
@@ -258,4 +271,4 @@ Append a new entry after each phase; do not delete previous entries.
 
 ## 13. Immediate next action
 
-Proceed to Phase 3: Invitation Auth, RBAC, and security (Supabase Auth SSR client/server utilities, invitation-only login page, backend role authorization, route protection, and security headers). If connecting to a live Supabase project, prompt user for Supabase URL and Keys. Commit and push Phase 2 work to GitHub.
+Proceed to Phase 4: Dashboard and operational retrieval (implement dashboard summary cards, failure trend chart, top error codes summary, recent events table, date filter controls, and PostgreSQL exact error-code and full-text lexical runbook retrieval). Commit and push Phase 3 implementation to GitHub.
