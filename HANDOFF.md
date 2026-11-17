@@ -4,8 +4,8 @@
 **Repository:** `chargeops-pilot`  
 **Purpose:** Persistent record of actual project state for Antigravity and developers.  
 **Last updated:** 2026-11-17  
-**Current status:** Phase 4 completed. Ready for Phase 5.  
-**Current phase:** Phase 5 — Assistant and safe answer orchestration.
+**Current status:** Phase 5 completed. Ready for Phase 6.  
+**Current phase:** Phase 6 — UI completion, hardening, and final QA.
 
 > This file is the single source of truth for progress. Do not mark any phase complete without checking the actual files and running its acceptance tests.
 
@@ -58,7 +58,7 @@ Allowed statuses: `NOT STARTED`, `IN PROGRESS`, `BLOCKED`, `PASS`, `PASS WITH LI
 | 2 | Database, synthetic seed, metrics | PASS | 2026-11-17 | Initial schema migration, RLS policies, synthetic seed, deterministic metrics engine and 8 edge-case tests all passing. |
 | 3 | Invitation Auth, RBAC, security | PASS | 2026-11-17 | Supabase Auth SSR, invitation-only login UI, trusted profile role resolution, admin/viewer RBAC enforcement, route handlers, proxy.ts, security headers, and unit tests passing. |
 | 4 | Dashboard and operational retrieval | PASS | 2026-11-17 | Dashboard KPI metrics, top errors summary, UTC date filter, lexical & exact runbook retrieval with source citations, API routes, and 5 unit tests passing. |
-| 5 | Assistant and safe orchestration | NOT STARTED | — | Four intents, citations, abstention |
+| 5 | Assistant and safe orchestration | PASS | 2026-11-17 | Four-path intent router, deterministic answer composer, prompt injection guards, operational action refusal, 12 golden evaluation tests passing, and Assistant UI component. |
 | 6 | UI completion and final QA | NOT STARTED | — | Responsive, accessible, security, tests |
 | 7 | Documentation, GitHub, deployment | NOT STARTED | — | Verify or mark blocked |
 
@@ -269,6 +269,28 @@ Append a new entry after each phase; do not delete previous entries.
 - Deployment URL (if verified): None.
 - Next phase: Phase 5 — Assistant and safe answer orchestration.
 
+### Phase 5 — Assistant and safe answer orchestration
+- Status: PASS
+- Date: 2026-11-17
+- Summary: Implemented intent routing engine (`lib/answer.ts`) covering Analytics, Knowledge, Combined, and safe Abstention (unsupported operational actions, unproven root causes, viewer admin requests, ambiguous time windows, prompt injections). Implemented deterministic template composer with UTC window, numerator, denominator, and strict citation formatting. Built `/api/assistant` protected route handler. Implemented interactive Assistant UI component (`components/Assistant.tsx`) with preset golden questions and intent/citation badges. Evaluated all 12 Golden Evaluation Questions in `tests/golden_questions.test.ts` with 100% pass rate.
+- Files created/updated:
+  - `lib/answer.ts`
+  - `components/Assistant.tsx`
+  - `app/api/assistant/route.ts`
+  - `app/page.tsx`
+  - `tests/golden_questions.test.ts`
+  - `HANDOFF.md`
+- Commands/tests:
+  - `npm run lint`: Passed with 0 errors.
+  - `npm run typecheck`: Passed with 0 errors.
+  - `npm test`: 35 tests across 5 suites passed in 3.94s (including all 12 golden questions).
+  - `npm run build`: Production build succeeded with all routes recognized.
+- Known limitations: In `AI_PROVIDER=none`, responses are strictly deterministic templates.
+- Security notes: Prompt injection attacks and operational command requests are safely blocked; no secret exposure; no arbitrary SQL.
+- Git commit: Pending push.
+- Deployment URL (if verified): None.
+- Next phase: Phase 6 — UI completion, hardening, and final QA.
+
 ## 12. Final acceptance checklist
 
 - [ ] Clean local setup works from README.
@@ -294,4 +316,4 @@ Append a new entry after each phase; do not delete previous entries.
 
 ## 13. Immediate next action
 
-Proceed to Phase 5: Assistant and safe answer orchestration (implement rule-based intent router for Analytics, Knowledge, Combined, and Unsupported; deterministic answer templates for AI_PROVIDER=none; optional server-only Gemini provider; citation enforcement; abstention logic; and evaluate 12 synthetic golden evaluation questions). Commit and push Phase 4 work to GitHub.
+Proceed to Phase 6: UI completion, hardening, and final QA (complete responsive light-only UI polish, loading/empty/error states, accessibility checks, review data boundaries and credentials, rerun all test suites, typecheck, lint, and production build). Commit and push Phase 5 work to GitHub.
