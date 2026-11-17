@@ -214,7 +214,7 @@ Append a new entry after each phase; do not delete previous entries.
   - `npm run build`: Production build succeeded with code 0.
 - Known limitations: Remote Supabase project URL and service role keys are not yet connected (awaiting user credentials when live remote DB connection is desired).
 - Security notes: All synthetic data; check constraint `synthetic = true` enforced; RLS default deny configured.
-- Git commit: Pending push.
+- Git commit: `2c18fbd` (pushed to origin/main)
 - Deployment URL (if verified): None.
 - Next phase: Phase 3 — Invitation Auth, RBAC, and security.
 
