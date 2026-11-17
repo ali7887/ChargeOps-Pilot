@@ -242,7 +242,7 @@ Append a new entry after each phase; do not delete previous entries.
   - `npm run build`: Production build succeeded with all routes and proxy recognized.
 - Known limitations: Public sign-up is disabled as required; first admin must be invited or assigned via Supabase dashboard / admin route.
 - Security notes: Service role key strictly protected server-side with browser guards; .env.local gitignored; Cache-Control: no-store enforced on sensitive API routes; security headers active.
-- Git commit: Pending push.
+- Git commit: `58ecfd1` (pushed to origin/main)
 - Deployment URL (if verified): None.
 - Next phase: Phase 4 — Dashboard and operational retrieval.
 
