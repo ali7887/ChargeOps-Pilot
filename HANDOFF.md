@@ -305,7 +305,7 @@ Append a new entry after each phase; do not delete previous entries.
   - `npm run build`: Production build succeeded with all static and dynamic routes.
 - Known limitations: Synthetic demonstration only; light-mode only (dark mode excluded by specification).
 - Security notes: No secrets in client bundle; no sensitive fields in git; .env.local ignored.
-- Git commit: Pending push.
+- Git commit: `42bb2d9` (pushed to origin/main)
 - Deployment URL (if verified): None.
 - Next phase: Phase 7 — Documentation, GitHub, deployment, and handoff.
 
