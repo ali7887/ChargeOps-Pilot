@@ -157,9 +157,9 @@ Never paste secrets into source files or commit them.
 ## 10. GitHub and deployment status
 
 **Git Local:** INITIALIZED (branch: `main`, clean working tree)  
-**GitHub Remote:** PUSHED (`https://github.com/ali7887/ChargeOps-Pilot.git`, branch `main`, commit `3993ff0`)  
+**GitHub Remote:** PUSHED (`https://github.com/ali7887/ChargeOps-Pilot.git`, branch `main`, commit `11f3703`)  
 **Vercel:** NOT DEPLOYED  
-**Supabase project:** CONFIGURED / VERIFIED (Live instance connected: profiles, charging_events, runbook_sections, audit_events tables verified)
+**Supabase project:** CONNECTED (API alive, but migrations not yet run in SQL Editor; tables returning 404 in schema cache)
 
 Update only after checking the actual state. Before push, inspect Git status/diff, remotes, ignored files, and secrets. Never force-push or overwrite an existing remote. Before deployment, verify environment variables, Supabase callback URLs, migrations, synthetic seed, and access restrictions. Record actual URLs only after successful verification.
 
@@ -324,9 +324,28 @@ Append a new entry after each phase; do not delete previous entries.
   - `git push origin main`: Successfully pushed to GitHub.
 - Known limitations: Hosted deployment on Vercel is pending user authorization and credentials.
 - Security notes: All environment variables in .env.local are gitignored; .env.example contains only safe placeholders; no private data committed.
-- Git commit: `e2caa4d` (pushed to origin/main)
+- Git commit: `11f3703` (pushed to origin/main)
 - Deployment URL (if verified): Pending remote Vercel deployment authorization.
 - Next phase: Complete (Maintenance & Deployment).
+
+## 11.1 Pre-Deployment Final Technical Audit (2026-11-17)
+
+Rigorous audit performed against real environment and codebase:
+
+| Item | Audit Check | Status | Verification Findings |
+|---|---|---|---|
+| 1 | Supabase migrations executed on real project | **FAIL** | Tables `profiles`, `charging_events`, `runbook_sections`, `audit_events` returned HTTP 404 in PostgREST schema cache. Migration SQL (`supabase/migrations/20261117000000_initial_schema.sql`) must be executed in Supabase SQL Editor. |
+| 2 | RLS and access policies active in real DB | **FAIL** | Policies are fully coded in migration file, but cannot be active because tables do not yet exist in the online database. |
+| 3 | Auth and user invitations work with real Supabase | **FAIL** (Blocker: DB) | Supabase Auth API works (user creation/deletion verified), but full invitation workflow is blocked because user role cannot be saved into missing `public.profiles`. |
+| 4 | Admin and Viewer RBAC enforced in API & DB | **FAIL** (Real DB) / **PASS** (Code & Unit Tests) | Code and unit tests (8 tests) enforce RBAC strictly. In real database, role resolution returns `null` until `profiles` table is created. |
+| 5 | No secrets/confidential env vars committed to GitHub | **PASS** | Full git history (`git log -p`) audited via script. Zero secret keys, service role keys, or sensitive URLs exist in any git commit. `.env.local` is gitignored. |
+| 6 | Dashboard & Runbook Retrieval connected to real DB | **FAIL** (Using Fallback) | API routes connect to Supabase, but fall back to synthetic memory structures due to tables 404 in schema cache. Will automatically query real DB once migration runs. |
+| 7 | Assistant works in AI_PROVIDER=none and with API key | **PASS** (`none`) / **NOT VERIFIED** (`gemini`) | Mode `none` works 100% deterministically and passes all 12 golden questions. Mode `gemini` has no `GEMINI_API_KEY` configured in `.env.local`. |
+| 8 | End-to-End testing of all core features with synthetic data | **PASS** | 35 automated tests pass (metrics edge cases, RBAC, retrieval, 12 golden questions). Next.js production build succeeds with all routes recognized. |
+
+### Deployment Readiness Verdict
+- **Local Application & GitHub Repository:** 100% READY (Build, typecheck, lint, and tests passing).
+- **Remote Infrastructure Blocker:** Must execute `supabase/migrations/20261117000000_initial_schema.sql` and `supabase/seed.sql` in Supabase SQL Editor before public deployment.
 
 ## 12. Final acceptance checklist
 
