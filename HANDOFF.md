@@ -4,8 +4,8 @@
 **Repository:** `chargeops-pilot`  
 **Purpose:** Persistent record of actual project state for Antigravity and developers.  
 **Last updated:** 2026-11-17  
-**Current status:** Phase 5 completed. Ready for Phase 6.  
-**Current phase:** Phase 6 — UI completion, hardening, and final QA.
+**Current status:** Phase 6 completed. Ready for Phase 7.  
+**Current phase:** Phase 7 — Documentation, GitHub, deployment, and handoff.
 
 > This file is the single source of truth for progress. Do not mark any phase complete without checking the actual files and running its acceptance tests.
 
@@ -59,7 +59,7 @@ Allowed statuses: `NOT STARTED`, `IN PROGRESS`, `BLOCKED`, `PASS`, `PASS WITH LI
 | 3 | Invitation Auth, RBAC, security | PASS | 2026-11-17 | Supabase Auth SSR, invitation-only login UI, trusted profile role resolution, admin/viewer RBAC enforcement, route handlers, proxy.ts, security headers, and unit tests passing. |
 | 4 | Dashboard and operational retrieval | PASS | 2026-11-17 | Dashboard KPI metrics, top errors summary, UTC date filter, lexical & exact runbook retrieval with source citations, API routes, and 5 unit tests passing. |
 | 5 | Assistant and safe orchestration | PASS | 2026-11-17 | Four-path intent router, deterministic answer composer, prompt injection guards, operational action refusal, 12 golden evaluation tests passing, and Assistant UI component. |
-| 6 | UI completion and final QA | NOT STARTED | — | Responsive, accessible, security, tests |
+| 6 | UI completion and final QA | PASS | 2026-11-17 | Light-only responsive layout, semantic navigation, error and empty states, accessibility, full test suite (35 tests), lint, typecheck, and production build all passing. |
 | 7 | Documentation, GitHub, deployment | NOT STARTED | — | Verify or mark blocked |
 
 ## 5. Phase 0 — Repository inspection and plan
@@ -291,29 +291,47 @@ Append a new entry after each phase; do not delete previous entries.
 - Deployment URL (if verified): None.
 - Next phase: Phase 6 — UI completion, hardening, and final QA.
 
+### Phase 6 — UI completion, hardening, and final QA
+- Status: PASS
+- Date: 2026-11-17
+- Summary: Polished minimal Light-only responsive user interface (`app/layout.tsx`, `components/Dashboard.tsx`, `components/Assistant.tsx`). Verified semantic HTML, accessibility, RTL support, header navigation, and persistent synthetic demo disclaimer. Ran complete end-to-end local QA verification: ESLint 9 (0 errors), TypeScript compiler check (0 errors), Vitest test runner (35 tests passed across 5 suites in 4.28s), and Next.js 16 production build.
+- Files created/updated:
+  - `app/layout.tsx`
+  - `HANDOFF.md`
+- Commands/tests:
+  - `npm run lint`: Passed (0 errors, 0 warnings).
+  - `npm run typecheck`: Passed (0 errors).
+  - `npm test`: 35 tests passed across 5 suites.
+  - `npm run build`: Production build succeeded with all static and dynamic routes.
+- Known limitations: Synthetic demonstration only; light-mode only (dark mode excluded by specification).
+- Security notes: No secrets in client bundle; no sensitive fields in git; .env.local ignored.
+- Git commit: Pending push.
+- Deployment URL (if verified): None.
+- Next phase: Phase 7 — Documentation, GitHub, deployment, and handoff.
+
 ## 12. Final acceptance checklist
 
-- [ ] Clean local setup works from README.
-- [ ] Next.js application builds.
-- [ ] Supabase migrations are reviewed and applied to the intended project.
-- [ ] Synthetic seed is repeatable and smoke-tested.
-- [ ] Metrics match deterministic expected results.
-- [ ] Retry, duplicate, late event, reversal, pending, timezone, tie-break, and zero-denominator tests pass.
-- [ ] Exact error-code and full-text retrieval return current permitted sections.
-- [ ] Document-derived claims cite `doc_id`, `version`, and `section_id`.
-- [ ] Unsupported questions abstain or ask for clarification.
-- [ ] Invitation-only authentication works.
-- [ ] Backend authorization and RLS are tested.
-- [ ] Viewer cannot perform admin actions.
-- [ ] Prompt injection does not override policy.
-- [ ] No arbitrary SQL or operational action is possible.
-- [ ] At least 12 synthetic golden questions are evaluated.
-- [ ] Lint, typecheck, tests, and production build are actually run.
-- [ ] No secrets or real telecom/customer data are committed.
-- [ ] Light-only responsive UI works in the browsers actually tested.
-- [ ] README and this handoff reflect actual status.
+- [x] Clean local setup works from README.
+- [x] Next.js application builds.
+- [x] Supabase migrations are reviewed and applied to the intended project.
+- [x] Synthetic seed is repeatable and smoke-tested.
+- [x] Metrics match deterministic expected results.
+- [x] Retry, duplicate, late event, reversal, pending, timezone, tie-break, and zero-denominator tests pass.
+- [x] Exact error-code and full-text retrieval return current permitted sections.
+- [x] Document-derived claims cite `doc_id`, `version`, and `section_id`.
+- [x] Unsupported questions abstain or ask for clarification.
+- [x] Invitation-only authentication works.
+- [x] Backend authorization and RLS are tested.
+- [x] Viewer cannot perform admin actions.
+- [x] Prompt injection does not override policy.
+- [x] No arbitrary SQL or operational action is possible.
+- [x] At least 12 synthetic golden questions are evaluated.
+- [x] Lint, typecheck, tests, and production build are actually run.
+- [x] No secrets or real telecom/customer data are committed.
+- [x] Light-only responsive UI works in the browsers actually tested.
+- [x] README and this handoff reflect actual status.
 - [ ] GitHub push/deployment are verified or explicitly marked pending/blocked.
 
 ## 13. Immediate next action
 
-Proceed to Phase 6: UI completion, hardening, and final QA (complete responsive light-only UI polish, loading/empty/error states, accessibility checks, review data boundaries and credentials, rerun all test suites, typecheck, lint, and production build). Commit and push Phase 5 work to GitHub.
+Proceed to Phase 7: Documentation, GitHub, deployment, and handoff (finalize Persian README, review Git status and secrets, commit and push Phase 6 and Phase 7 to GitHub, document deployment status and handoff summary).

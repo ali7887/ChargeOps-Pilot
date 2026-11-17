@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,19 +14,27 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fa" dir="rtl" className="h-full bg-slate-50">
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 antialiased">
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 antialiased font-sans">
         <header className="border-b border-slate-200 bg-white">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
-              <span className="rounded bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white">
+              <Link href="/" className="rounded bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-blue-700">
                 ChargeOps Pilot
-              </span>
-              <span className="text-sm font-medium text-slate-600">
+              </Link>
+              <span className="text-sm font-medium text-slate-600 hidden sm:inline">
                 سامانه پایش عملیات شارژینگ
               </span>
             </div>
-            <div className="text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
-              دموی داده‌های مصنوعی؛ بدون اتصال به شبکه یا سامانه واقعی
+            <div className="flex items-center gap-4">
+              <div className="text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full text-center">
+                دموی داده‌های مصنوعی؛ بدون اتصال به شبکه یا سامانه واقعی
+              </div>
+              <Link
+                href="/login"
+                className="text-xs font-medium text-slate-600 hover:text-blue-600 border border-slate-200 px-3 py-1 rounded hover:bg-slate-50 transition"
+              >
+                ورود
+              </Link>
             </div>
           </div>
         </header>
