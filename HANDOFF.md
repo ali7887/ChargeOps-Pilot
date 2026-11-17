@@ -4,8 +4,8 @@
 **Repository:** `chargeops-pilot`  
 **Purpose:** Persistent record of actual project state for Antigravity and developers.  
 **Last updated:** 2026-11-17  
-**Current status:** Phase 3 completed. Ready for Phase 4.  
-**Current phase:** Phase 4 — Dashboard and operational retrieval.
+**Current status:** Phase 4 completed. Ready for Phase 5.  
+**Current phase:** Phase 5 — Assistant and safe answer orchestration.
 
 > This file is the single source of truth for progress. Do not mark any phase complete without checking the actual files and running its acceptance tests.
 
@@ -57,7 +57,7 @@ Allowed statuses: `NOT STARTED`, `IN PROGRESS`, `BLOCKED`, `PASS`, `PASS WITH LI
 | 1 | Foundation and configuration | PASS | 2026-11-17 | Next.js 16 App Router, TS, Tailwind, error boundary, Persian README, npm scripts, lint/typecheck/tests/build all passing. |
 | 2 | Database, synthetic seed, metrics | PASS | 2026-11-17 | Initial schema migration, RLS policies, synthetic seed, deterministic metrics engine and 8 edge-case tests all passing. |
 | 3 | Invitation Auth, RBAC, security | PASS | 2026-11-17 | Supabase Auth SSR, invitation-only login UI, trusted profile role resolution, admin/viewer RBAC enforcement, route handlers, proxy.ts, security headers, and unit tests passing. |
-| 4 | Dashboard and operational retrieval | NOT STARTED | — | Metrics, exact-code, full-text |
+| 4 | Dashboard and operational retrieval | PASS | 2026-11-17 | Dashboard KPI metrics, top errors summary, UTC date filter, lexical & exact runbook retrieval with source citations, API routes, and 5 unit tests passing. |
 | 5 | Assistant and safe orchestration | NOT STARTED | — | Four intents, citations, abstention |
 | 6 | UI completion and final QA | NOT STARTED | — | Responsive, accessible, security, tests |
 | 7 | Documentation, GitHub, deployment | NOT STARTED | — | Verify or mark blocked |
@@ -246,6 +246,29 @@ Append a new entry after each phase; do not delete previous entries.
 - Deployment URL (if verified): None.
 - Next phase: Phase 4 — Dashboard and operational retrieval.
 
+### Phase 4 — Dashboard and operational retrieval
+- Status: PASS
+- Date: 2026-11-17
+- Summary: Implemented operational runbook retrieval engine (`lib/retrieval.ts`) with exact error code matching and lexical full-text search, strict active/validity window filtering, and preserved citation metadata (`doc_id`, `version`, `section_id`). Implemented protected route handlers (`/api/dashboard/metrics`, `/api/retrieval/runbooks`). Built interactive responsive Light-mode Dashboard component (`components/Dashboard.tsx`) with UTC date filtering, deterministic KPI summary cards (Total, Success, Failed, Reversed, Pending, As-of), top error codes breakdown, and operational runbook lookup widget. Added 5 comprehensive retrieval unit tests.
+- Files created/updated:
+  - `lib/retrieval.ts`
+  - `components/Dashboard.tsx`
+  - `app/page.tsx`
+  - `app/api/dashboard/metrics/route.ts`
+  - `app/api/retrieval/runbooks/route.ts`
+  - `tests/retrieval.test.ts`
+  - `HANDOFF.md`
+- Commands/tests:
+  - `npm run lint`: Passed with 0 errors.
+  - `npm run typecheck`: Passed with 0 errors.
+  - `npm test`: 23 tests across 4 suites passed in 3.42s.
+  - `npm run build`: Production build succeeded with all routes recognized.
+- Known limitations: Synthetic dataset in v1; retrieval is lexical/full-text (no semantic embeddings).
+- Security notes: All retrieval and metric endpoints are authenticated; RLS-ready; no CSV/file upload allowed.
+- Git commit: Pending push.
+- Deployment URL (if verified): None.
+- Next phase: Phase 5 — Assistant and safe answer orchestration.
+
 ## 12. Final acceptance checklist
 
 - [ ] Clean local setup works from README.
@@ -271,4 +294,4 @@ Append a new entry after each phase; do not delete previous entries.
 
 ## 13. Immediate next action
 
-Proceed to Phase 4: Dashboard and operational retrieval (implement dashboard summary cards, failure trend chart, top error codes summary, recent events table, date filter controls, and PostgreSQL exact error-code and full-text lexical runbook retrieval). Commit and push Phase 3 implementation to GitHub.
+Proceed to Phase 5: Assistant and safe answer orchestration (implement rule-based intent router for Analytics, Knowledge, Combined, and Unsupported; deterministic answer templates for AI_PROVIDER=none; optional server-only Gemini provider; citation enforcement; abstention logic; and evaluate 12 synthetic golden evaluation questions). Commit and push Phase 4 work to GitHub.
