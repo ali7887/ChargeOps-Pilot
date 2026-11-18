@@ -60,9 +60,10 @@ DEMO_DATA_ONLY=true
 ### گام ۴: اعمال ساختار پایگاه‌داده و داده‌های ساختگی در Supabase
 کدهای مایگریشن و داده‌های ساختگی در مسیرهای زیر قرار دارند:
 - **ساختار جداول و RLS:** فایل `supabase/migrations/20261117000000_initial_schema.sql`
+- **امن‌سازی و محدودسازی سطح دسترسی جداول (Principle of Least Privilege):** فایل `supabase/migrations/20261118000000_restrict_application_table_privileges.sql`
 - **داده‌های نمونه ساختگی:** فایل `supabase/seed.sql`
 
-این اسکریپت‌ها را در بخش **SQL Editor** کنسول Supabase پروژه خود اجرا کنید.
+این اسکریپت‌ها را به ترتیب در بخش **SQL Editor** کنسول Supabase پروژه خود اجرا کنید.
 
 ### گام ۵: اجرای آزمون‌ها و بررسی کیفیت کدها
 ```bash
@@ -147,13 +148,15 @@ ChargeOps Pilot/
 │       └── admin.ts                  # کلاینت ادمین با محافظت امنیتی عدم دسترسی در مرورگر
 ├── supabase/
 │   ├── migrations/
-│   │   └── 20261117000000_initial_schema.sql # تعریف جداول و پالیسی‌های RLS
+│   │   ├── 20261117000000_initial_schema.sql # تعریف جداول و پالیسی‌های RLS
+│   │   └── 20261118000000_restrict_application_table_privileges.sql # سلب دسترسی anon/auth و اعمال اصل حداقل دسترسی
 │   └── seed.sql                      # داده‌های ساختگی و ران‌بوک‌های نمونه
 └── tests/
     ├── foundation.test.ts            # تست سلامت پایه
     ├── auth.test.ts                  # تست‌های کنترل دسترسی و احراز هویت
     ├── metrics.test.ts               # تست‌های حالت‌های لبه‌ای شاخص‌ها (Edge-Cases)
     ├── retrieval.test.ts             # تست‌های بازیابی و استنادات ران‌بوک
+    ├── privilege_remediation.test.ts # تست‌های اعتبارسنجی محدودسازی دسترسی پایگاه‌داده
     └── golden_questions.test.ts      # تست ۱۲ سوال طلایی
 ```
 
