@@ -58,12 +58,13 @@ DEMO_DATA_ONLY=true
 ```
 
 ### گام ۴: اعمال ساختار پایگاه‌داده و داده‌های ساختگی در Supabase
-کدهای مایگریشن و داده‌های ساختگی در مسیرهای زیر قرار دارند:
-- **ساختار جداول و RLS:** فایل `supabase/migrations/20261117000000_initial_schema.sql`
-- **امن‌سازی و محدودسازی سطح دسترسی جداول (Principle of Least Privilege):** فایل `supabase/migrations/20261118000000_restrict_application_table_privileges.sql`
-- **داده‌های نمونه ساختگی:** فایل `supabase/seed.sql`
 
-این اسکریپت‌ها را به ترتیب در بخش **SQL Editor** کنسول Supabase پروژه خود اجرا کنید.
+> **نکته وضعیت پروژه جاری:** در پروژه متصل فعلی، تمامی مایگریشن‌ها و داده‌های ساختگی زیر روی پایگاه داده زنده Supabase اجرا و راستی‌آزمایی شده‌اند و نیازی به اجرای مجدد آن‌ها برای استقرار جاری نیست.
+
+در صورت راه‌اندازی یک پروژه جدید Supabase (Fresh Setup)، اسکریپت‌های زیر باید **دقیقاً به ترتیب** در بخش **SQL Editor** کنسول Supabase اجرا شوند:
+1. **ساختار جداول، ایندکس‌ها و RLS پایه:** فایل `supabase/migrations/20261117000000_initial_schema.sql`
+2. **امن‌سازی و محدودسازی سطح دسترسی جداول (Principle of Least Privilege):** فایل `supabase/migrations/20261118000000_restrict_application_table_privileges.sql` (سلب دسترسی‌های مستقیم `anon`، اعطای فقط `SELECT` به `authenticated` و حفظ دسترسی کامل برای `service_role`)
+3. **داده‌های نمونه ساختگی:** فایل `supabase/seed.sql` (۱۲ رویداد شارژینگ و ۵ بخش ران‌بوک نمونه)
 
 ### گام ۵: اجرای آزمون‌ها و بررسی کیفیت کدها
 ```bash
@@ -73,7 +74,7 @@ npm run typecheck
 # بررسی استانداردهای کدنویسی (Lint)
 npm run lint
 
-# اجرای تمامی آزمون‌های واحد و سوالات طلایی (35 تست)
+# اجرای تمامی آزمون‌های واحد، RBAC، لبه‌ای و ۱۲ سوال طلایی (۴۷ تست در ۶ سوئیت)
 npm test
 
 # ایجاد بیلد بهینه تولید (Production Build)
@@ -85,6 +86,28 @@ npm run build
 npm run dev
 ```
 برنامه در آدرس `http://localhost:3000` در دسترس خواهد بود.
+
+---
+
+## ۳.۱. آماده‌سازی و استقرار در Vercel (Production Deployment)
+
+جهت استقرار نسخه تولیدی روی پلتفرم Vercel:
+
+1. **اتصال مخزن:** مخزن گیت‌هاب `ali7887/ChargeOps-Pilot` را در پنل کاربری Vercel اضافه (Import) کنید.
+2. **شاخه اصلی:** شاخه `main` را انتخاب نمایید (چارچوب Next.js به‌صورت خودکار تشخیص داده می‌شود).
+3. **تنظیم متغیرهای محیطی در Vercel:**
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
+   SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+   AI_PROVIDER=none
+   DEMO_DATA_ONLY=true
+   ```
+4. **تنظیم آدرس‌های مجاز در Supabase (Authentication):**
+   - در داشبورد Supabase > **Authentication** > **URL Configuration**:
+     - مقدار **Site URL** را برابر با آدرس دامنه Vercel (مانند `https://chargeops-pilot.vercel.app`) قرار دهید.
+     - در بخش **Redirect URLs**، آدرس‌های مجاز شامل `https://chargeops-pilot.vercel.app/**` و `http://localhost:3000/**` را اضافه فرمایید.
+5. **شروع استقرار (Deploy):** دکمه Deploy را کلیک نموده و پس از اتمام ساخت، پیوند تولیدی را بررسی فرمایید.
 
 ---
 

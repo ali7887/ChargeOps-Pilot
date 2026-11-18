@@ -159,7 +159,7 @@ Never paste secrets into source files or commit them.
 **Git Local:** INITIALIZED (branch: `main`, clean working tree)  
 **GitHub Remote:** PUSHED (`https://github.com/ali7887/ChargeOps-Pilot.git`, branch `main`)  
 **Vercel:** READY FOR DEPLOYMENT (Awaiting user authorization/token)  
-**Supabase project:** CONNECTED & VERIFIED (Schema active, 12 synthetic events and 5 runbook sections seeded, RLS enabled, Least Privilege migration ready)
+**Supabase project:** CONNECTED & FULLY VERIFIED (Schema active, 12 synthetic events and 5 runbook sections seeded, RLS enabled, Least Privilege table migration executed and confirmed via verification query on live database)
 
 Update only after checking the actual state. Before push, inspect Git status/diff, remotes, ignored files, and secrets. Never force-push or overwrite an existing remote. Before deployment, verify environment variables, Supabase callback URLs, migrations, synthetic seed, and access restrictions. Record actual URLs only after successful verification.
 
@@ -335,7 +335,7 @@ Rigorous audit performed against real environment and codebase:
 | Item | Audit Check | Status | Verification Findings |
 |---|---|---|---|
 | 1 | Supabase migrations executed on real project | **PASS** | `20261117000000_initial_schema.sql` executed in Supabase. Tables `profiles`, `charging_events`, `runbook_sections`, and `audit_events` exist, verified with status 200 OK. |
-| 2 | RLS and access policies active in real DB | **PASS** | RLS active on all 4 tables. Anonymous client rejected/0 rows. Authenticated users governed by explicit SELECT policies. Table-level grant restriction migration (`20261118000000_restrict_application_table_privileges.sql`) prepared and verified. |
+| 2 | RLS and access policies active in real DB | **PASS** | RLS active on all 4 tables. Anonymous client rejected/0 rows. Authenticated users governed by explicit SELECT policies. Table-level grant restriction migration (`20261118000000_restrict_application_table_privileges.sql`) manually executed and verified on live Supabase DB: `anon` has no direct table privileges, `authenticated` has SELECT only, and `service_role` retains full table privileges on `profiles`, `charging_events`, `runbook_sections`, and `audit_events`. |
 | 3 | Auth and user invitations work with real Supabase | **PASS** | Supabase Auth API works. User creation and server-side role assignment via `assignUserRole` to `public.profiles` verified with admin client. |
 | 4 | Admin and Viewer RBAC enforced in API & DB | **PASS** | Server-side `requireRole` and `requireAuth` enforce RBAC strictly. Admin and Viewer distinctions tested with 8 dedicated auth tests. |
 | 5 | No secrets/confidential env vars committed to GitHub | **PASS** | Full git history (`git log -p`) audited. Zero secret keys, service role keys, or sensitive URLs exist in any git commit. `.env.local` is gitignored. |
@@ -345,18 +345,31 @@ Rigorous audit performed against real environment and codebase:
 
 ### Deployment Readiness Verdict
 - **Local Application & GitHub Repository:** 100% READY (All 47 tests, build, typecheck, and lint passing).
-- **Remote Supabase Database:** 100% READY (Schema migrated, seed data loaded, RLS active).
-- **Next Step:** Execute privilege hardening SQL migration `20261118000000_restrict_application_table_privileges.sql` in Supabase SQL Editor if table-level revocation is desired, and connect to Vercel for production deployment.
+- **Remote Supabase Database:** 100% READY (Schema migrated, seed data loaded, RLS active, table privileges restricted to least privilege and verified via post-migration query on live database).
+- **Next Step:** Prepare Vercel environment variables, confirm Supabase redirect URLs, and execute production deployment.
 
 ## 11.2 Post-Audit Security Hardening: Table Privileges Remediation
-- Status: PASS (Prepared & Unit-Tested)
+- Status: PASS (Executed in Supabase SQL Editor & Verified on Live DB)
 - Date: 2026-11-18
-- Summary: In response to PostgreSQL `information_schema.role_table_grants` default table grants, created non-destructive migration `supabase/migrations/20261118000000_restrict_application_table_privileges.sql`. It explicitly revokes all privileges on `profiles`, `charging_events`, `runbook_sections`, and `audit_events` from `anon` and `authenticated`, grants strictly `SELECT` to `authenticated`, and preserves full administrative privileges for `service_role`. Added 12 automated unit tests in `tests/privilege_remediation.test.ts`.
+- Summary: In response to PostgreSQL `information_schema.role_table_grants` default table grants, migration `supabase/migrations/20261118000000_restrict_application_table_privileges.sql` was authored, tested locally with 12 unit tests, and manually executed by the user in the live Supabase SQL Editor. A post-migration verification query (`information_schema.role_table_grants`) was run on the live database and confirmed:
+  - `anon`: No direct table privileges returned.
+  - `authenticated`: Strictly `SELECT` only on the four core application tables.
+  - `service_role`: Retains full administrative table privileges required for server-side user/role bootstrap and maintenance.
+  - Verified tables: `public.profiles`, `public.charging_events`, `public.runbook_sections`, and `public.audit_events`.
+  - Boundary note: This verification strictly covers table-level privileges across the four core application tables. It does not claim that unrelated security surfaces (such as Storage buckets, Edge Functions, Views, or other PostgreSQL roles) have been audited.
+
+| Role | Actual verified access |
+|---|---|
+| anon | No direct table privileges |
+| authenticated | SELECT only |
+| service_role | Full table privileges |
+
 - Files created/updated:
   - `supabase/migrations/20261118000000_restrict_application_table_privileges.sql`
   - `tests/privilege_remediation.test.ts`
 - Commands/tests:
   - `npm test`: 47 tests across 6 suites passing.
+  - Live Supabase SQL Editor execution and `role_table_grants` query verification: Confirmed.
 
 ## 12. Final acceptance checklist
 
@@ -383,4 +396,4 @@ Rigorous audit performed against real environment and codebase:
 
 ## 13. Immediate next action
 
-All phases 0 through 7 and post-audit hardening are completed and verified (47 tests passing, build passing, git working tree clean, pushed to GitHub). The system is fully ready for Vercel deployment upon user authorization.
+All phases 0 through 7 and post-audit table privilege remediation are completed and verified (47 tests passing, build passing, git working tree clean, pushed to GitHub, live Supabase database confirmed). The application is fully prepared for Vercel deployment upon user execution of deployment steps.
